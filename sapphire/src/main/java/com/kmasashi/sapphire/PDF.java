@@ -127,6 +127,9 @@ public class PDF {
 		// 改行コード削除
 		String result = article.replace("\n\r", "").replace("\n", "").replace("\r", "");
 
+		// 空白  < >
+		result = result.replace("&nbsp;", "　").replace("&lt;", "＜").replace("&gt;", "＞");
+
 		// タグの開始
 		boolean tagStart = false;
 		// ラグ読み込み
@@ -181,7 +184,7 @@ public class PDF {
 					try {
 						Image image = Image.getInstance(new URL(imageUrl));
 						paragraph.add(new Chunk(image, 0, 0, true));
-					} catch (IOException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				} 
