@@ -41,8 +41,8 @@ public class AmebloTemplete2 extends Ameblo {
 		// Document オブジェクト
 		Document document = getDocument(BLOG_URL + url);
 
-		String srticleTitle = document.select(".skinArticleTitle").text();
-		System.out.println("Title:" + srticleTitle);
+		String articleTitle = document.select(".skinArticleTitle").text();
+		System.out.println("Title:" + articleTitle);
 
 		String articleTime = document.select("time").text();
 		System.out.println("Time:" + articleTime);
@@ -57,16 +57,19 @@ public class AmebloTemplete2 extends Ameblo {
 		} else {
 			System.out.println(articleText);
 		}
+		String articleHtml = document.select(".skin-entryBody").html();
+		// &nbsp; を改行
+		articleHtml = articleHtml.replace("&nbsp;", "<br>");
 
 		// 出力
-		outArticleText(outFile, title, articleTime, articleTheme, articleText);
+		outArticleText(outFile, articleTitle, articleTime, articleTheme, articleText);
 
 		// Map作成
 		Map<String, String> map = new HashMap<>();
-		map.put("title", title);
+		map.put("title", articleTitle);
 		map.put("time", articleTime);
 		map.put("theme", articleTheme);
-		map.put("article", document.select(".skin-entryBody").html());
+		map.put("article", articleHtml);
 
 		return map;
 	}

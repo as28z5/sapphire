@@ -3,6 +3,7 @@ package com.kmasashi.sapphire;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,6 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 public class PDF {
 
@@ -25,6 +25,8 @@ public class PDF {
 	private final String year;
 	/** ファイル名 */
 	private final String filename;
+	/** イメージマップ */
+	private Map<String, Image> imageMap = new HashMap<>();
 
 	/**
 	 * コンストラクタ
@@ -72,16 +74,17 @@ public class PDF {
 			makeOpeningPage(doc, font2);
 
 			// アンダーライン
-			DottedLineSeparator separator = new DottedLineSeparator();
-			separator.setPercentage(59500f / 523f);
-			Chunk linebreak = new Chunk(separator);
+//			DottedLineSeparator separator = new DottedLineSeparator();
+//			separator.setPercentage(59500f / 523f);
+//			Chunk linebreak = new Chunk(separator);
 
 			//PDF文章に文字列を追加
 			if (null != articleList) {
 				for (Map<String, String> articleMap: articleList) {
 					out(doc, font1, articleMap);
 	
-					doc.add(linebreak);
+//					doc.add(linebreak);
+					doc.newPage();
 				}
 			}
 
@@ -182,7 +185,14 @@ public class PDF {
 					String imageUrl = htmlTag.substring(sPoint + 6, ePoint);
 					System.out.println("ImageURL:" + imageUrl);
 					try {
-						Image image = Image.getInstance(new URL(imageUrl));
+//						Image image = Image.getInstance(new URL(imageUrl));
+						Image image;
+						if (imageMap.containsKey(imageUrl)) {
+							image = imageMap.get(imageUrl);
+						} else {
+							image = Image.getInstance(new URL(imageUrl));
+							imageMap.put(imageUrl, image);
+						}
 						paragraph.add(new Chunk(image, 0, 0, true));
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -191,8 +201,11 @@ public class PDF {
 				// 改行
 				else if (htmlTag.startsWith("<br ") || "<br>".equals(htmlTag)) {
 					paragraph.add("\n");
-
 				}
+//				// div の終了
+//				else if ("</div>".equals(htmlTag)) {
+//					paragraph.add("\n");
+//				}
 				// リンク
 				else if (htmlTag.contains(" href=\"")) {
 					int sPoint = htmlTag.indexOf(" href=\"");
