@@ -191,6 +191,36 @@ public class PDF {
 							image = imageMap.get(imageUrl);
 						} else {
 							image = Image.getInstance(new URL(imageUrl));
+							System.out.println("image size :" + image.getWidth() + " " + image.getHeight());
+							// 幅
+							float width = image.getWidth();
+
+							// 高さ
+							float height = image.getHeight();
+							
+							// 幅 500超過
+							if (500 < width) {
+								float scale = 500 / width;
+								System.out.println("width 500 超過　:" + scale);
+								
+								// 幅調整
+								image.scaleAbsoluteWidth(500);
+								// 高さ調整
+								image.scaleAbsoluteHeight(height * scale);
+							}
+							
+							// スケール高さ 700超過
+							float scaledhegiht = image.getScaledHeight();
+							if (700 < scaledhegiht) {
+								float scale = 700 / scaledhegiht;
+								System.out.println("height 700 超過　:" + scale);
+
+								// 幅調整
+								image.scaleAbsoluteWidth(image.getScaledWidth() * scale);
+								// 高さ調整
+								image.scaleAbsoluteHeight(700);								
+							}
+							
 							imageMap.put(imageUrl, image);
 						}
 						paragraph.add(new Chunk(image, 0, 0, true));
