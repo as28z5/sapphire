@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.itextpdf.text.Anchor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -232,17 +233,39 @@ public class PDF {
 				else if (htmlTag.startsWith("<br ") || "<br>".equals(htmlTag)) {
 					paragraph.add("\n");
 				}
-//				// div の終了
-//				else if ("</div>".equals(htmlTag)) {
-//					paragraph.add("\n");
-//				}
+				// 参照ブログ記事(リブログ)
+				else if (htmlTag.startsWith("<iframe class=\"reblogCard\"")) {
+					// src を取得
+					int sPoint = htmlTag.indexOf(" src=\"");
+					int ePoint = htmlTag.indexOf("\"", sPoint+6);
+					// リブログURL
+					String reblogUrl = htmlTag.substring(sPoint + 6, ePoint);
+					System.out.println("リブログURL:" + reblogUrl);
+
+					// リブログURL(表示用)
+					String reblogUrlView = reblogUrl.replace("s/embed/reblog-card/", "");
+					int pPoint = reblogUrlView.indexOf("?");
+					reblogUrlView = reblogUrlView.substring(0, pPoint);
+					paragraph.add("[参照ブログ記事(リブログ)]");
+					paragraph.add("\n");
+
+					// アンカー
+					Anchor anchor = new Anchor(reblogUrlView);
+					anchor.setReference(reblogUrlView);
+					paragraph.add(anchor);
+					paragraph.add("\n\n");
+				}
 				// リンク
 				else if (htmlTag.contains(" href=\"")) {
 					int sPoint = htmlTag.indexOf(" href=\"");
 					int ePoint = htmlTag.indexOf("\"", sPoint+7);
 					// リンクURL
 					String linkUrl = htmlTag.substring(sPoint + 7, ePoint);
-					paragraph.add(linkUrl);
+
+					// アンカー
+					Anchor anchor = new Anchor(linkUrl);
+					anchor.setReference(linkUrl);
+					paragraph.add(anchor);
 				}
 				else {
 //					paragraph.add(htmlTag);

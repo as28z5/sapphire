@@ -48,14 +48,15 @@ public class App {
 	
 			// // 月別記事一覧
 			Map<String, List<String>> monthlyArticleList = ameblo.getMonthlyArticleList(monthlyArticleCountMap);
+
+			// 	ファイル名
+			String fileName = year + "_" + new Date().getTime();
 	
 			// 月別記事一覧ループ
-			List<Map<String, String>> articleList = ameblo.loopMonthlyArticleList(monthlyArticleList);
-	
-			String fileName = year + "_" + new Date().getTime() + ".pdf";
-	
+			List<Map<String, String>> articleList = ameblo.loopMonthlyArticleList(monthlyArticleList, fileName + ".txt");
+
 			// PDF出力
-			new PDF(bolgTitle, year, fileName).out(articleList);
+			new PDF(bolgTitle, year, fileName + ".pdf").out(articleList);
 		}
 	}
 

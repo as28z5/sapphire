@@ -66,11 +66,12 @@ public abstract class Ameblo {
 	/**
 	 * 月別記事一覧ループ
 	 * @param monthlyArticleList
+	 * @param fileName 
 	 */
-	protected List<Map<String, String>> loopMonthlyArticleList(Map<String, List<String>> monthlyArticleList) {
+	protected List<Map<String, String>> loopMonthlyArticleList(Map<String, List<String>> monthlyArticleList, String fileName) {
 
 		// 出力ファイル
-		File outFile = new File("text.txt");
+		File outFile = new File(fileName);
 
 		// 出力ファイル削除
 		if (outFile.exists()) {
