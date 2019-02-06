@@ -136,7 +136,7 @@ public class PDF {
 
 		// タグの開始
 		boolean tagStart = false;
-		// ラグ読み込み
+		// タグ読み込み
 		boolean tagLoad = false;
 		// タグ
 		StringBuilder tag = null;
@@ -154,7 +154,7 @@ public class PDF {
 			}
 
 			// タグの終了
-			if ('>' == str) {
+			if (tagLoad && '>' == str) {
 				tagLoad = false;
 
 				// タグの完成版
